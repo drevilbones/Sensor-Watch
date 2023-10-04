@@ -31,7 +31,7 @@
 #include <string.h>
 #include "dice_roller_face.h"
 
-const uint8_t D_SIDESp[] = {2, 4, 6, 8, 10, 12, 20, 100};
+const uint8_t D_SIDES[] = {2, 4, 6, 8, 10, 12, 20, 100};
 
 void dice_roller_face_setup(movement_settings_t *settings, uint8_t watch_face_index, void ** context_ptr) {
     (void) settings;
@@ -41,6 +41,10 @@ void dice_roller_face_setup(movement_settings_t *settings, uint8_t watch_face_in
         // Do any one-time tasks in here; the inside of this conditional happens only at boot.
     }
     // Do any pin or peripheral setup here; this will be called whenever the watch wakes from deep sleep.
+    // Emulator only: Seed random number generator
+    #if __EMSCRIPTEN__
+    srand(time(NULL));
+    #endif
 }
 
 void dice_roller_face_activate(movement_settings_t *settings, void *context) {
@@ -65,13 +69,16 @@ bool dice_roller_face_loop(movement_event_t event, movement_settings_t *settings
             // illuminate the LED in response to EVENT_LIGHT_BUTTON_DOWN; to suppress that behavior, add an
             // empty case for EVENT_LIGHT_BUTTON_DOWN.
             break;
+        case EVENT_LIGHT_BUTTON_DOWN:
+            //To supress the LED
+            break;
         case EVENT_ALARM_BUTTON_UP:
             // Just in case you have need for another button.
             break;
         case EVENT_TIMEOUT:
             // Your watch face will receive this event after a period of inactivity. If it makes sense to resign,
             // you may uncomment this line to move back to the first watch face in the list:
-            // movement_move_to_face(0);
+            movement_move_to_face(0);
             break;
         case EVENT_LOW_ENERGY_UPDATE:
             // If you did not resign in EVENT_TIMEOUT, you can use this event to update the display once a minute.
