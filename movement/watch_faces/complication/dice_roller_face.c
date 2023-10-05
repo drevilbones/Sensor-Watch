@@ -52,6 +52,8 @@ void dice_roller_face_activate(movement_settings_t *settings, void *context) {
     dice_roller_state_t *state = (dice_roller_state_t *)context;
 
     // Handle any tasks related to your watch face coming on screen.
+    state->num = 1;
+    state->side_index = 0;
 }
 
 bool dice_roller_face_loop(movement_event_t event, movement_settings_t *settings, void *context) {
@@ -60,6 +62,7 @@ bool dice_roller_face_loop(movement_event_t event, movement_settings_t *settings
     switch (event.event_type) {
         case EVENT_ACTIVATE:
             // Show your initial UI here.
+            watch_display_string("DICE", 0);
             break;
         case EVENT_TICK:
             // If needed, update your display here.
@@ -78,13 +81,18 @@ bool dice_roller_face_loop(movement_event_t event, movement_settings_t *settings
         case EVENT_TIMEOUT:
             // Your watch face will receive this event after a period of inactivity. If it makes sense to resign,
             // you may uncomment this line to move back to the first watch face in the list:
-            movement_move_to_face(0);
+            // movement_move_to_face(0);
+
+            // nope, we're gonna ignore the timeout
             break;
         case EVENT_LOW_ENERGY_UPDATE:
             // If you did not resign in EVENT_TIMEOUT, you can use this event to update the display once a minute.
             // Avoid displaying fast-updating values like seconds, since the display won't update again for 60 seconds.
             // You should also consider starting the tick animation, to show the wearer that this is sleep mode:
             // watch_start_tick_animation(500);
+
+            // actually let's resign here
+            movement_move_to_face(0);
             break;
         default:
             // Movement's default loop handler will step in for any cases you don't handle above:

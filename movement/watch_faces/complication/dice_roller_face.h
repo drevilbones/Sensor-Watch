@@ -36,9 +36,8 @@
 
 typedef struct {
     uint8_t num;
-    uint8_t sides;
+    uint8_t side_index; //the index of const uint8_t D_SIDES[]
     uint8_t total;
-    uint8_t unused;
 } dice_roller_state_t;
 
 void dice_roller_face_setup(movement_settings_t *settings, uint8_t watch_face_index, void ** context_ptr);
