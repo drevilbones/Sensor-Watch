@@ -22,13 +22,13 @@
  * SOFTWARE.
  */
 
-#ifndef DICE_ROLLER_FACE_H_
-#define DICE_ROLLER_FACE_H_
+#ifndef RPG_DICE_FACE_H_
+#define RPG_DICE_FACE_H_
 
 #include "movement.h"
 
 /*
- * DICE ROLLER WATCH FACE
+ * RPG DICE ROLLER WATCH FACE
  *
  * TODO: describe use
  *
@@ -38,20 +38,20 @@ typedef struct {
     uint8_t num;
     uint8_t side_index; //the index of const uint8_t D_SIDES[]
     uint8_t total;
-} dice_roller_state_t;
+} rpg_dice_state_t;
 
-void dice_roller_face_setup(movement_settings_t *settings, uint8_t watch_face_index, void ** context_ptr);
-void dice_roller_face_activate(movement_settings_t *settings, void *context);
-bool dice_roller_face_loop(movement_event_t event, movement_settings_t *settings, void *context);
-void dice_roller_face_resign(movement_settings_t *settings, void *context);
+void rpg_dice_face_setup(movement_settings_t *settings, uint8_t watch_face_index, void ** context_ptr);
+void rpg_dice_face_activate(movement_settings_t *settings, void *context);
+bool rpg_dice_face_loop(movement_event_t event, movement_settings_t *settings, void *context);
+void rpg_dice_face_resign(movement_settings_t *settings, void *context);
 
-#define dice_roller_face ((const watch_face_t){ \
-    dice_roller_face_setup, \
-    dice_roller_face_activate, \
-    dice_roller_face_loop, \
-    dice_roller_face_resign, \
+#define rpg_dice_face ((const watch_face_t){ \
+    rpg_dice_face_setup, \
+    rpg_dice_face_activate, \
+    rpg_dice_face_loop, \
+    rpg_dice_face_resign, \
     NULL, \
 })
 
-#endif // DICE_ROLLER_FACE_H_
+#endif // RPG_DICE_FACE_H_
 

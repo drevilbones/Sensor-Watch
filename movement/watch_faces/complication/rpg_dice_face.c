@@ -29,15 +29,31 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include "dice_roller_face.h"
+#include "rpg_dice_face.h"
 
+#define DEFAULT_D_INDEX 6 //make d20 the default
 const uint8_t D_SIDES[] = {2, 4, 6, 8, 10, 12, 20, 100};
 
-void dice_roller_face_setup(movement_settings_t *settings, uint8_t watch_face_index, void ** context_ptr) {
+// Custom methods
+
+// Set up dice choosing interface
+void choose_dice(rpg_dice_state_t *state) {
+
+}
+
+void reset(rpg_dice_state_t *state) {
+    state->num = 1;
+    state->side_index = DEFAULT_D_INDEX;
+}
+
+
+// Standard methods
+
+void rpg_dice_face_setup(movement_settings_t *settings, uint8_t watch_face_index, void ** context_ptr) {
     (void) settings;
     if (*context_ptr == NULL) {
-        *context_ptr = malloc(sizeof(dice_roller_state_t));
-        memset(*context_ptr, 0, sizeof(dice_roller_state_t));
+        *context_ptr = malloc(sizeof(rpg_dice_state_t));
+        memset(*context_ptr, 0, sizeof(rpg_dice_state_t));
         // Do any one-time tasks in here; the inside of this conditional happens only at boot.
     }
     // Do any pin or peripheral setup here; this will be called whenever the watch wakes from deep sleep.
@@ -47,22 +63,21 @@ void dice_roller_face_setup(movement_settings_t *settings, uint8_t watch_face_in
     #endif
 }
 
-void dice_roller_face_activate(movement_settings_t *settings, void *context) {
+void rpg_dice_face_activate(movement_settings_t *settings, void *context) {
     (void) settings;
-    dice_roller_state_t *state = (dice_roller_state_t *)context;
+    rpg_dice_state_t *state = (rpg_dice_state_t *)context;
 
     // Handle any tasks related to your watch face coming on screen.
-    state->num = 1;
-    state->side_index = 0;
+    reset(state);
 }
 
-bool dice_roller_face_loop(movement_event_t event, movement_settings_t *settings, void *context) {
-    dice_roller_state_t *state = (dice_roller_state_t *)context;
+bool rpg_dice_face_loop(movement_event_t event, movement_settings_t *settings, void *context) {
+    rpg_dice_state_t *state = (rpg_dice_state_t *)context;
 
     switch (event.event_type) {
         case EVENT_ACTIVATE:
             // Show your initial UI here.
-            watch_display_string("DICE", 0);
+            choose_dice(state);
             break;
         case EVENT_TICK:
             // If needed, update your display here.
@@ -71,12 +86,20 @@ bool dice_roller_face_loop(movement_event_t event, movement_settings_t *settings
             // You can use the Light button for your own purposes. Note that by default, Movement will also
             // illuminate the LED in response to EVENT_LIGHT_BUTTON_DOWN; to suppress that behavior, add an
             // empty case for EVENT_LIGHT_BUTTON_DOWN.
+            //TODO: Roll the dice
             break;
         case EVENT_LIGHT_BUTTON_DOWN:
             //To supress the LED
             break;
+        case EVENT_LIGHT_LONG_PRESS:
+            //TODO: reset to defaults and go to dice input screen
+            break;
         case EVENT_ALARM_BUTTON_UP:
             // Just in case you have need for another button.
+            //TODO: Increase number of dice
+            break;
+        case EVENT_ALARM_LONG_PRESS:
+            //TODO: Move to next dice size in D_SIZE
             break;
         case EVENT_TIMEOUT:
             // Your watch face will receive this event after a period of inactivity. If it makes sense to resign,
@@ -112,7 +135,7 @@ bool dice_roller_face_loop(movement_event_t event, movement_settings_t *settings
     return true;
 }
 
-void dice_roller_face_resign(movement_settings_t *settings, void *context) {
+void rpg_dice_face_resign(movement_settings_t *settings, void *context) {
     (void) settings;
     (void) context;
 
