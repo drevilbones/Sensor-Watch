@@ -40,12 +40,12 @@
  */
 
 typedef struct {
-    int8_t count;
+    int count;
 } updown_counter_state_t;
 
 // Custom
 void display_count(updown_counter_state_t *state);
-void update_count(updown_counter_state_t *state, int8_t value);
+void update_count(updown_counter_state_t *state, int value);
 
 // Standard
 void updown_counter_face_setup(movement_settings_t *settings, uint8_t watch_face_index, void ** context_ptr);

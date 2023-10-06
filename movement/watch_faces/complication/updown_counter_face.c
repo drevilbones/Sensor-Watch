@@ -30,13 +30,19 @@
 
 void display_count(updown_counter_state_t *state) {
     char buffer[14];
-    sprintf(buffer, "CO  %03d  ", (int)(state->count));
+    if (state->count >= 0)
+        sprintf(buffer, "UD   %03d", (int)(state->count));
+    else
+        sprintf(buffer, "UD  %04d", (int)(state->count));
+    printf(buffer, "\n");
     watch_display_string(buffer, 0);
 }
 
-void update_count(updown_counter_state_t *state, int8_t value) {
+void update_count(updown_counter_state_t *state, int value) {
     //Increment or decrement the counter based on value
-    if ((state->count < (int8_t)(999)) || (state->count > (int8_t)(-999))) {
+    if (state->count > 998 || state->count < -998) {
+        state->count = 0;
+    } else {
         state->count = state->count + value;
     }
 }
@@ -63,7 +69,7 @@ void updown_counter_face_activate(movement_settings_t *settings, void *context) 
 bool updown_counter_face_loop(movement_event_t event, movement_settings_t *settings, void *context) {
     updown_counter_state_t *state = (updown_counter_state_t *)context;
 
-    switch (event.event_type) {
+    switch (event.event_type) { //TODO: Make beeps
         case EVENT_ACTIVATE:
             display_count(state);
             break;
@@ -71,25 +77,29 @@ bool updown_counter_face_loop(movement_event_t event, movement_settings_t *setti
             break;
         case EVENT_LIGHT_BUTTON_UP:
             // decrement counter
+            printf("-1\n");
             update_count(state, -1);
             display_count(state);
             break;
         case EVENT_LIGHT_LONG_PRESS:
             // decrement by 10
+            printf("-10\n");
             update_count(state, -10);
             display_count(state);
             break;
         case EVENT_LIGHT_BUTTON_DOWN:
             // reset and also supress LED
-            // if EVENT_ALARM_BUTTON_UP then reset to 0
+            // TODO: reset if alarm is pushed while light is held
             break;
         case EVENT_ALARM_BUTTON_UP:
             // increment counter
+            printf("1\n");
             update_count(state, 1);
             display_count(state);
             break;
         case EVENT_ALARM_LONG_PRESS:
             // increment by 10
+            printf("10\n");
             update_count(state, 10);
             display_count(state);
         case EVENT_TIMEOUT:
