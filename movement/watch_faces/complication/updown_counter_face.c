@@ -64,6 +64,7 @@ void updown_counter_face_activate(movement_settings_t *settings, void *context) 
     updown_counter_state_t *state = (updown_counter_state_t *)context;
 
     // Handle any tasks related to your watch face coming on screen.
+    state->count = 0;
 }
 
 bool updown_counter_face_loop(movement_event_t event, movement_settings_t *settings, void *context) {
@@ -77,29 +78,21 @@ bool updown_counter_face_loop(movement_event_t event, movement_settings_t *setti
             break;
         case EVENT_LIGHT_BUTTON_UP:
             // decrement counter
-            printf("-1\n");
             update_count(state, -1);
             display_count(state);
             break;
         case EVENT_LIGHT_LONG_PRESS:
             // decrement by 10
-            printf("-10\n");
             update_count(state, -10);
             display_count(state);
             break;
-        case EVENT_LIGHT_BUTTON_DOWN:
-            // reset and also supress LED
-            // TODO: reset if alarm is pushed while light is held
-            break;
         case EVENT_ALARM_BUTTON_UP:
             // increment counter
-            printf("1\n");
             update_count(state, 1);
             display_count(state);
             break;
         case EVENT_ALARM_LONG_PRESS:
             // increment by 10
-            printf("10\n");
             update_count(state, 10);
             display_count(state);
         case EVENT_TIMEOUT:
